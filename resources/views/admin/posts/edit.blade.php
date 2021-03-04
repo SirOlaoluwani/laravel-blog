@@ -15,9 +15,17 @@
                     </div>
 
                     <div class="panel-body">
-                        {!! Form::model($post, ['method' => 'PUT', 'url' => "/admin/posts/{$post->id}", 'class' => 'form-horizontal', 'role' => 'form']) !!}
+                        {!! Form::model($post, ['method' => 'PUT', 'url' => "/admin/posts/{$post->id}", 'class' => 'form-horizontal', 'role' => 'form', 'enctype' => 'multipart/form-data']) !!}
 
                             @include('admin.posts._form')
+                            
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <a href="{{$post->featured_image_url}}" target="_blank" rel="noreferrer" >
+                                        VIEW IMAGE.
+                                    </a>
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-2">

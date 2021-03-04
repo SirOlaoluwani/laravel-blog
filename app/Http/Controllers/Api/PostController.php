@@ -35,7 +35,8 @@ class PostController extends Controller
 
             return $query->drafted();
         })
-        ->paginate($request->get('limit', 10));
+        ->with(['category'])
+        ->paginate($request->get('limit', 5));
 
         return PostResource::collection($posts);
     }

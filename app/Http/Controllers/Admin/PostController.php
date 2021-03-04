@@ -9,6 +9,10 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+
 
 class PostController extends Controller
 {
@@ -45,10 +49,22 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
+        $validated = $request->validate([
+            'featured_image' => 'required|image|max:2048'
+        ]);
+        
+        $now = Carbon::now();
+        $extension = $validated['featured_image']->extension();
+        $slug = Str::slug($request->title,'-');
+        $imageName = $slug.$now.".".$extension;
+        $validated['featured_image']->storeAs('/public', $imageName);
+        $featuredImageUrl = Storage::url($imageName);
+        
         $post = Post::create([
             'title'       => $request->title,
             'body'        => $request->body,
             'category_id' => $request->category_id,
+            'featured_image_url' => $featuredImageUrl
         ]);
 
         $tagsId = collect($request->tags)->map(function ($tag) {
@@ -105,12 +121,24 @@ class PostController extends Controller
     {
         // disbust cache
         Cache::forget($post->etag);
-
-        $post->update([
+        
+        $input = [
             'title'       => $request->title,
             'body'        => $request->body,
             'category_id' => $request->category_id,
-        ]);
+        ];
+        
+        if($request->hasFile('featured_image')){
+            $now = Carbon::now();
+            $extension = $request->featured_image->extension();
+            $slug = Str::slug($request->title,'-');
+            $imageName = $slug.$now.".".$extension;
+            $request->featured_image->storeAs('/public', $imageName);
+            $featuredImageUrl = Storage::url($imageName);
+            $input['featured_image_url'] = $featuredImageUrl;
+        }
+
+        $post->update($input);
 
         $tagsId = collect($request->tags)->map(function ($tag) {
             return Tag::firstOrCreate(['name' => $tag])->id;

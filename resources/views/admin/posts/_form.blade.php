@@ -14,7 +14,7 @@
     {!! Form::label('body', 'Body', ['class' => 'col-md-2 control-label']) !!}
 
     <div class="col-md-8">
-        {!! Form::textarea('body', null, ['class' => 'form-control', 'required']) !!}
+        {!! Form::textarea('body', null, ['class' => 'form-control', 'id' => 'mytextarea']) !!}
 
         <span class="help-block">
             <strong>{{ $errors->first('body') }}</strong>
@@ -46,10 +46,22 @@
     {!! Form::label('tags', 'Tag', ['class' => 'col-md-2 control-label']) !!}
 
     <div class="col-md-8">
-        {!! Form::select('tags[]', $tags, $tag, ['class' => 'form-control select2-tags', 'required', 'multiple']) !!}
+        {!! Form::select('tags[]', $tags, $tag, ['class' => 'form-control select2-tags', 'multiple']) !!}
 
         <span class="help-block">
             <strong>{{ $errors->first('tags') }}</strong>
+        </span>
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('featured_image') ? ' has-error' : '' }}">
+    {!! Form::label('featured_image', 'Featured Image', ['class' => 'col-md-2 control-label']) !!}
+
+    <div class="col-md-8">
+        {!! Form::file('featured_image', null, ['class' => 'form-control', 'required']) !!}
+
+        <span class="help-block">
+            <strong>{{ $errors->first('featured_image') }}</strong>
         </span>
     </div>
 </div>

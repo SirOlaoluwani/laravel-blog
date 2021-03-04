@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.0",
-        "nunomaduro/collision": "^4.1"
+        "nunomaduro/collision": "^4.1",
+        "ramsey/uuid": "^4.1"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

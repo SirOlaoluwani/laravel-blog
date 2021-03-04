@@ -1,0 +1,2 @@
+[02-Jan-2021 12:38:54 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home/bdicgsit/admin.bdicofficial.com-app/storage/framework/views/acde7ca5ac312a19b620606e08f4dd6207e4c48f.php on line 44
+[02-Jan-2021 12:40:13 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home/bdicgsit/admin.bdicofficial.com-app/storage/framework/views/acde7ca5ac312a19b620606e08f4dd6207e4c48f.php on line 44

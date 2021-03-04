@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'BDIC') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -36,7 +36,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel Blog') }}
+                        {{ config('app.name', 'BDIC') }}
                     </a>
                 </div>
 
@@ -50,7 +50,6 @@
                         <!-- Authentication Links -->
                         @if (Auth::guest())
                             <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -83,11 +82,21 @@
                 @include('flash::message')
             </div>
         </div>
+        
 
         @yield('content')
     </div>
 
     <!-- Scripts -->
+    
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdn.tiny.cloud/1/opmci2zlw2meqpqvsmjnybqdixk0d8qwe2cljohk4urvf32o/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    
+    <script>
+        tinymce.init({
+          selector: '#mytextarea'
+        });
+    </script>
+    @yield('script')
 </body>
 </html>

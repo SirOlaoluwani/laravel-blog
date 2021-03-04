@@ -23,6 +23,7 @@ class PostResource extends JsonResource
             'title'        => $this->title,
             'body'         => $this->body,
             'is_published' => (bool) $this->is_published,
+            'featured_image_url' => 'https://admin.bdicofficial.com'.$this->featured_image_url,
             'created_at'   => $this->created_at->format('d-m-Y H:i'),
             'updated_at'   => $this->updated_at->format('d-m-Y H:i'),
             'comments'     => CommentResource::collection($this->whenLoaded('comments')),

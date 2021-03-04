@@ -16,6 +16,7 @@ class Post extends Model
         'user_id',
         'category_id',
         'is_published',
+        'featured_image_url'
     ];
 
     protected static function boot()
