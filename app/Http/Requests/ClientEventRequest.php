@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ClientRequest extends FormRequest
+class ClientEventRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,15 +25,9 @@ class ClientRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email',
             'description' => 'required',
-            'client_image' => 'nullable|image|max:2024',
-            'client_image_gallery.*' =>  'nullable|image|max:2024',
-            'client_works.*.title' => 'required',
-            'client_works.*.medium' => 'required',
-            'client_works.*.year_completed' => 'required',
-            'client_works.*.client_image' => 'required|image|max:2024',
-            'client_works.*.category' => 'required'
+            'date' => 'required',
+            'location' => 'required',
         ];
     }
 }

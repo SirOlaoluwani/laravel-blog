@@ -19,7 +19,6 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Description</th>
-                                    <th>Published</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -28,7 +27,6 @@
                                     <tr>
                                         <td>{{ $client->name }}</td>
                                         <td>{{ str_limit($client->description, 60) }}</td>
-                                        <td>{{ $client->published }}</td>
                                         <td>
                                             @if (Auth::user()->is_admin)
                                                 @php
@@ -43,6 +41,8 @@
                                             <!--<a href="{{ url("/admin/client/works/{$client->id}") }}" class="btn btn-xs btn-success">Add works</a>-->
                                             <a href="{{ url("/admin/client/link?client={$client->id}") }}" class="btn btn-xs btn-info">Generate Client Link</a>
                                             <a href="{{ url("/admin/clients/{$client->id}/edit") }}" class="btn btn-xs btn-info">Edit</a>
+                                            <a href="{{ url("/admin/client/events/{$client->id}") }}" class="btn btn-xs btn-info">View Events</a>
+                                            <a href="{{ url("/admin/client/exhibitions/{$client->id}") }}" class="btn btn-xs btn-info">View Past Exhibitions</a>
                                             <a href="{{ url("/admin/clients/{$client->id}") }}" data-method="DELETE" data-token="{{ csrf_token() }}" data-confirm="Are you sure?" class="btn btn-xs btn-danger">Delete</a>
                                         </td>
                                     </tr>

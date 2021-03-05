@@ -18,6 +18,9 @@ Route::group(['middleware' => 'api', 'namespace' => 'Api'], function () {
     Route::get('/clients/{client}/{client_uuid}', 'ClientController@showWithGallery');
     Route::get('/client/gallery/{client}', 'ClientController@showGallery');
     Route::post('/client/request-more-mail/{client_uuid}', 'ClientController@sendRequestMoreDetailsMail');
+    Route::get('/clients/events/{client_id}', 'ClientController@showEvents');
+
+    
     
     Route::resource('/posts', 'PostController', ['only' => ['index', 'show']]);
 });

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClientGalleryTable extends Migration
+class CreateClientPastExhibitionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateClientGalleryTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_gallery', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('client_past_exhibitions', function (Blueprint $table) {
+            $table->id();
             $table->integer('client_id')->unsigned();
-            $table->string('image_url', 255);
+            $table->string('name', 225);
+            $table->string('location', 225);
+            $table->string('year', 225);
+            $table->text('featured_image_url');
+            $table->tinyInteger('is_published');
             $table->timestamps();
         });
     }
@@ -28,6 +32,6 @@ class CreateClientGalleryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('client_gallery');
+        Schema::dropIfExists('client_past_exhibitions');
     }
 }

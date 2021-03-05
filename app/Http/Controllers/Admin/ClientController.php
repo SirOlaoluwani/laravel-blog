@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ClientPastExhibitions;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClientEventRequest;
+use App\Http\Requests\ClientPastExhibitionRequest;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
+use App\Models\ClientEvent;
 use App\Models\ClientGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -47,7 +51,6 @@ class ClientController extends Controller
     {
         try {
             $validated = $request->validated();
-            // dd($validated);
             $now = Carbon::now();
             $extension = $validated['client_image']->extension();
             $imageName = Str::slug($validated['name'], '-').$now.".".$extension;
@@ -56,6 +59,7 @@ class ClientController extends Controller
             
             $client = Client::create([
                 'name'       => $validated['name'],
+                'email'       => $validated['email'],
                 'description'        => $validated['description'],
                 'client_image_url' => $featuredImageUrl,
                 'uuid' => Uuid::uuid4(),
@@ -115,11 +119,7 @@ class ClientController extends Controller
         return view('admin.clients.edit', compact('client'));
     }
     
-    public function works($id)
-    {
-        $client = Client::where('id', $id)->with(['gallery'])->first();
-        return view('admin.clients.edit', compact('client'));
-    }
+    
 
     /**
      * Update the specified resource in storage.
@@ -130,7 +130,6 @@ class ClientController extends Controller
      */
     public function update(ClientRequest $request, $id)
     {
-        dd($request->all());
         try {
             $validated = $request->validated();
             
@@ -139,6 +138,7 @@ class ClientController extends Controller
             $input = [
                 'name' => $validated['name'],
                 'description' => $validated['description'],
+                'email'       => $validated['email'],
             ];
             
             $slug = Str::slug($validated['name'],'-');
@@ -227,11 +227,204 @@ class ClientController extends Controller
 
     public function publish(Client $client)
     {
-        // dd('communityWorks', $communityWorks->is_published);
         $client->is_published = $client->is_published === "0" ? 1: 0;
         $client->save();
         flash()->overlay('Client changed successfully.');
 
         return redirect('/admin/clients');
     }
+    
+
+
+    /**
+     * The following methods are for managing Events
+     */
+
+    public function createEvent($id)
+    {
+        return view('admin.clients.events.create', ["client" => $id]);
+    }
+
+    public function editEvent($client_id, $id)
+    {
+        $event = ClientEvent::where('id', $id)->first();
+        
+        return view('admin.clients.events.edit', ['event' => $event, "client" => $client_id]);
+    }
+    
+    public function storeEvents(ClientEventRequest $request, $id)
+    {
+        try {
+            $client = Client::where('id', $id)->first();
+            $validated = $request->validated();
+            
+            $client = ClientEvent::create([
+                'client_id' => $client->id,
+                'name'       => $validated['name'],
+                'description'        => $validated['description'],
+                'location' => $validated['location'],
+                'date' => $validated['date'],
+            ]);
+            
+            flash()->overlay('Client event created successfully.');
+    
+            return redirect("/admin/client/events/$id");
+        } catch(\Exception $e) {
+            flash()->overlay($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+    
+    public function updateEvent(ClientEventRequest $request, $client_id, $id)
+    {
+        try {
+            $event = ClientEvent::where('id', $id)->first();
+            $validated = $request->validated();
+            
+            $event->update([
+                'name' => $validated['name'],
+                'description' => $validated['description'],
+                'location' => $validated['location'],
+                'date' => $validated['date'],
+            ]);
+            
+            flash()->overlay('Client event updated successfully.');
+    
+            return redirect("/admin/client/events/$client_id");
+        } catch(\Exception $e) {
+            flash()->overlay($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+    
+    
+    public function listEvents($id)
+    {
+        $events = ClientEvent::where('client_id', $id)->paginate(10);
+        $data["events"] = $events;
+        $data["client"] = $id;
+        return view('admin.clients.events.index', $data);
+    }
+
+    public function deleteEvent($id) 
+    {
+        $event = ClientEvent::where('id', $id)->first();
+        $event->delete();
+        return redirect()->back();
+    }
+
+    public function publishEvent($id)
+    {
+        $event  = ClientEvent::where('id', $id)->first();
+        $event->is_published = $event->is_published === 0 ? 1: 0;
+        $event->save();
+        flash()->overlay('Event published successfully.');
+
+        return redirect()->back();
+    }
+
+    /**
+     * The following methods are for managing past exhibitions
+     */
+    
+    public function createExhibition($id)
+    {
+        return view('admin.clients.exhibitions.create', ["client" => $id]);
+    }
+
+    public function editExhibition($client_id, $id)
+    {
+        $exhibition = ClientPastExhibitions::where('id', $id)->first();
+        
+        return view('admin.clients.exhibitions.edit', ['exhibition' => $exhibition, "client" => $client_id]);
+    }
+
+    public function listExhibitions($id)
+    {
+        $exhibitions = ClientPastExhibitions::where('client_id', $id)->paginate(10);
+        $data["exhibitions"] = $exhibitions;
+        $data["client"] = $id;
+        return view('admin.clients.exhibitions.index', $data);
+    }
+
+    public function storeExhibition(ClientPastExhibitionRequest $request, $id)
+    {
+        try {
+            $client = Client::where('id', $id)->first();
+            $validated  = $request->validated();
+
+            $slug = Str::slug($validated['name'],'-');
+            if($request->hasFile('featured_image')){
+                $now = Carbon::now();
+                $extension = $validated['featured_image']->extension();
+                $imageName = $slug.$now.".".$extension;
+                $validated['featured_image']->storeAs('/public', $imageName);
+                $featuredImageUrl = Storage::url($imageName);
+                $validated['featured_image_url'] = $featuredImageUrl;
+            } else {
+                throw new \Exception('Sorry, you need to select a featured image.');
+            }
+            
+            $client = ClientPastExhibitions::create([
+                'client_id' => $client->id,
+                'name'       => $validated['name'],
+                'location' => $validated['location'],
+                'year' => $validated['year'],
+                'featured_image_url' => $validated['featured_image_url']
+            ]);
+            
+            flash()->overlay('Client past exhibition created successfully.');
+    
+            return redirect("/admin/client/exhibitions/$id");
+        } catch(\Exception $e) {
+            flash()->overlay($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function updateExhibition(ClientPastExhibitionRequest $request, $client_id, $id)
+    {
+        try {
+            $exhibition = ClientPastExhibitions::where('id', $id)->first();
+            $validated  = $request->validated();
+
+            $slug = Str::slug($validated['name'],'-');
+            
+            if($request->hasFile('featured_image')){
+                $now = Carbon::now();
+                $extension = $validated['featured_image']->extension();
+                $imageName = $slug.$now.".".$extension;
+                $validated['featured_image']->storeAs('/public', $imageName);
+                $featuredImageUrl = Storage::url($imageName);
+                $validated['featured_image_url'] = $featuredImageUrl;
+            }
+
+            $exhibition->update($validated);
+            
+            flash()->overlay('Client past exhibition updated successfully.');
+    
+            return redirect("/admin/client/exhibitions/$client_id");
+        } catch(\Exception $e) {
+            flash()->overlay($e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+    
+    public function deleteExhibtion($id) 
+    {
+        $event = ClientPastExhibitions::where('id', $id)->first();
+        $event->delete();
+        return redirect()->back();
+    }
+
+    public function publishExhibtion($id)
+    {
+        $event  = ClientPastExhibitions::where('id', $id)->first();
+        $event->is_published = $event->is_published === 0 ? 1: 0;
+        $event->save();
+        flash()->overlay('Client past exhibition published successfully.');
+
+        return redirect()->back();
+    }
+
 }

@@ -36,6 +36,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
     Route::get('/client/link', 'ClientController@generateClientLink');
     Route::get('/client/delete-gallery', 'ClientController@deleteGallery');
     
+    // EVENTS ROUTES
+    Route::get('/client/event/create/{id}', 'ClientController@createEvent');
+    Route::get('/client/event/edit/{client_id}/{id}', 'ClientController@editEvent');
+    Route::post('/client/event/store/{id}', 'ClientController@storeEvents');
+    Route::put('/client/event/update/{client_id}/{id}', 'ClientController@updateEvent');
+    Route::delete('/client/event/delete/{id}', 'ClientController@deleteEvent');
+    Route::put('/client/event/publish/{id}', 'ClientController@publishEvent');
+    Route::get('/client/events/{id}', 'ClientController@listEvents');
+
+    //PAST EXHIBITIONS ROUTES
+    Route::get('/client/exhibition/create/{id}', 'ClientController@createExhibition');
+    Route::get('/client/exhibition/edit/{client_id}/{id}', 'ClientController@editExhibition');
+    Route::post('/client/exhibition/store/{id}', 'ClientController@storeExhibition');
+    Route::put('/client/exhibition/update/{client_id}/{id}', 'ClientController@updateExhibition');
+    Route::delete('/client/exhibition/delete/{id}', 'ClientController@deleteExhibtion');
+    Route::put('/client/exhibition/publish/{id}', 'ClientController@publishExhibtion');
+    Route::get('/client/exhibitions/{id}', 'ClientController@listExhibitions');
+    
     Route::put('/clients/${id}', 'ClientController@update');
     Route::put('/clients/{client}/publish', 'ClientController@publish')->middleware('admin');
     

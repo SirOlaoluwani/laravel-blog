@@ -10,6 +10,7 @@ use App\Models\ClientGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Mail\RequestMoreAboutClient;
+use App\Models\ClientEvent;
 use Illuminate\Support\Facades\Mail;
 
 class ClientController extends Controller
@@ -54,14 +55,18 @@ class ClientController extends Controller
     
     public function showWithGallery($id, $client_uuid)
     {
-        $client = Client::where('slug', $id)->where('uuid', $client_uuid)->with(['gallery'])->first();
-        return $client;
+        return Client::where('slug', $id)->where('uuid', $client_uuid)->with(['gallery', 'events', 'past_exhibitions'])->first();
     }
     
     public function showGallery($client)
     {
         $client = ClientGallery::where('client_id', $client)->whereNot('category', "Portrait Commissions")->take(3);
         return ClientGalleryResource::collection($client);
+    }
+
+    public function showEvents($client_id)
+    {
+        return ClientEvent::where('client_id', $client_id)->paginate(10);
     }
     
     public function sendRequestMoreDetailsMail(Request $request, $client_uuid)

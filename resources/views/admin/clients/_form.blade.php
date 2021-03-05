@@ -1,7 +1,7 @@
 
 @if ($flash = session('errors'))
     <div class="form-group has-error">
-        <label for="submit" class="col-md-12 control-label" style="text-align: left;">{{$flash}}</label>
+        <label for="submit" class="col-md-12 control-label" style="text-align: center;">{{$flash}}</label>
     </div>
 @endif
 
@@ -15,6 +15,18 @@
 
         <span class="help-block">
             <strong>{{ $errors->first('name') }}</strong>
+        </span>
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+    {!! Form::label('email', 'Email', ['class' => 'col-md-2 control-label']) !!}
+
+    <div class="col-md-8">
+        {!! Form::text('email', null, ['class' => 'form-control', 'autofocus', 'required']) !!}
+
+        <span class="help-block">
+            <strong>{{ $errors->first('email') }}</strong>
         </span>
     </div>
 </div>
