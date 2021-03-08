@@ -27,7 +27,7 @@
                                     <tr>
                                         <td>{{ $client->name }}</td>
                                         <td>{{ str_limit($client->description, 60) }}</td>
-                                        <td>
+                                        <td style="width: 40%;">
                                             @if (Auth::user()->is_admin)
                                                 @php
                                                     if($client->is_published == 1) {
@@ -43,6 +43,7 @@
                                             <a href="{{ url("/admin/clients/{$client->id}/edit") }}" class="btn btn-xs btn-info">Edit</a>
                                             <a href="{{ url("/admin/client/events/{$client->id}") }}" class="btn btn-xs btn-info">View Events</a>
                                             <a href="{{ url("/admin/client/exhibitions/{$client->id}") }}" class="btn btn-xs btn-info">View Past Exhibitions</a>
+                                            <a href="{{ url("/admin/client/works/{$client->id}") }}" class="btn btn-xs btn-info">View Works</a>
                                             <a href="{{ url("/admin/clients/{$client->id}") }}" data-method="DELETE" data-token="{{ csrf_token() }}" data-confirm="Are you sure?" class="btn btn-xs btn-danger">Delete</a>
                                         </td>
                                     </tr>

@@ -14,6 +14,8 @@ class ClientGallery extends Model
         'title',
         'medium',
         'category',
+        'visibility',
+        'status'
     ];
     
     protected $table = "client_gallery";
@@ -23,4 +25,3 @@ class ClientGallery extends Model
         return $this->belongsTo(Client::class);
     }
 }
-

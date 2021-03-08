@@ -53,6 +53,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'auth
     Route::delete('/client/exhibition/delete/{id}', 'ClientController@deleteExhibtion');
     Route::put('/client/exhibition/publish/{id}', 'ClientController@publishExhibtion');
     Route::get('/client/exhibitions/{id}', 'ClientController@listExhibitions');
+
+    //WORKS ROUTES
+    Route::get('/client/work/create/{id}', 'ClientWorkController@create');
+    Route::get('/client/work/edit/{client_id}/{id}', 'ClientWorkController@edit');
+    Route::post('/client/work/store/{client_id}', 'ClientWorkController@store');
+    Route::put('/client/work/update/{client_id}/{id}', 'ClientWorkController@update');
+    Route::delete('/client/work/delete/{id}', 'ClientWorkController@delete');
+    Route::get('/client/works/{id}', 'ClientWorkController@index');
     
     Route::put('/clients/${id}', 'ClientController@update');
     Route::put('/clients/{client}/publish', 'ClientController@publish')->middleware('admin');

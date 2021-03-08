@@ -60,7 +60,7 @@ class ClientController extends Controller
     
     public function showGallery($client)
     {
-        $client = ClientGallery::where('client_id', $client)->whereNot('category', "Portrait Commissions")->take(3);
+        $client = ClientGallery::where('client_id', $client)->whereNot('category', "Portrait Commissions")->whereNot("visibility", "public")->take(3);
         return ClientGalleryResource::collection($client);
     }
 
