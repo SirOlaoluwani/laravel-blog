@@ -287,16 +287,20 @@ class ClientController extends Controller
             $event = ClientEvent::where('id', $id)->first();
             $validated = $request->validated();
             $now = Carbon::now();
-            $extension = $validated['client_image']->extension();
-            $imageName = Str::slug($validated['name'], '-').$now.".".$extension;
-            $validated['client_image']->storeAs('/public', $imageName);
+            
+            if(!empty($validated['client_image'])){
+                $extension = $validated['client_image']->extension();
+                $imageName = Str::slug($validated['name'], '-').$now.".".$extension;
+                $validated['client_image']->storeAs('/public', $imageName);
+                $validated['featured_image_url'] = Storage::url($imageName);
+            }
             
             $event->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'location' => $validated['location'],
                 'date' => $validated['date'],
-                'featured_image_url' => Storage::url($imageName)
+                'featured_image_url' => $validated['featured_image_url'] ?? $event->featured_image_url
             ]);
             
             flash()->overlay('Client event updated successfully.');
