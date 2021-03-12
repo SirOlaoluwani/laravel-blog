@@ -54,3 +54,15 @@
         </span>
     </div>
 </div>
+
+<div class="form-group{{ $errors->has('client_image') ? ' has-error' : '' }}">
+    {!! Form::label('client_image', 'Featured Image', ['class' => 'col-md-2 control-label']) !!}
+
+    <div class="col-md-8">
+        {!! Form::file('client_image', null, ['class' => 'form-control', 'required']) !!}
+
+        <span class="help-block">
+            <strong>{{ $errors->first('client_image') }}</strong>
+        </span>
+    </div>
+</div>

@@ -30,6 +30,14 @@
 
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-2">
+                                    <a href="{{$event->featured_image_url}}" target="_blank" rel="noreferrer" >
+                                        <strong>👉 Click to view uploaded featured image.</strong>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-2">
                                     <button type="submit" class="btn btn-primary">
                                         Update
                                     </button>

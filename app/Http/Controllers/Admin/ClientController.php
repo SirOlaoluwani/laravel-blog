@@ -257,6 +257,11 @@ class ClientController extends Controller
         try {
             $client = Client::where('id', $id)->first();
             $validated = $request->validated();
+            $now = Carbon::now();
+            $extension = $validated['client_image']->extension();
+            $imageName = Str::slug($validated['name'], '-').$now.".".$extension;
+            
+            $validated['client_image']->storeAs('/public', $imageName);
             
             $client = ClientEvent::create([
                 'client_id' => $client->id,
@@ -264,6 +269,7 @@ class ClientController extends Controller
                 'description'        => $validated['description'],
                 'location' => $validated['location'],
                 'date' => $validated['date'],
+                'featured_image_url' => Storage::url($imageName)
             ]);
             
             flash()->overlay('Client event created successfully.');
@@ -280,12 +286,17 @@ class ClientController extends Controller
         try {
             $event = ClientEvent::where('id', $id)->first();
             $validated = $request->validated();
+            $now = Carbon::now();
+            $extension = $validated['client_image']->extension();
+            $imageName = Str::slug($validated['name'], '-').$now.".".$extension;
+            $validated['client_image']->storeAs('/public', $imageName);
             
             $event->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'location' => $validated['location'],
                 'date' => $validated['date'],
+                'featured_image_url' => Storage::url($imageName)
             ]);
             
             flash()->overlay('Client event updated successfully.');

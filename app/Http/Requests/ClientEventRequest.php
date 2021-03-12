@@ -28,6 +28,7 @@ class ClientEventRequest extends FormRequest
             'description' => 'required',
             'date' => 'required',
             'location' => 'required',
+            'client_image' => 'nullable|image|max:1024',
         ];
     }
 }

@@ -13,6 +13,7 @@ class ClientEvent extends Model
         'description',
         'date',
         'location',
+        'featured_image_url'
     ];
     
     protected $table = "client_event";
